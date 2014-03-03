@@ -1,0 +1,55 @@
+<?php
+class M_kemahasiswaan extends CI_Model {
+	function __construct() {
+		parent::__construct();
+	}
+	
+	function ambiluser(){
+		return $this->db->query("select * from users");
+	}
+	
+	function getuser($where = ''){
+		return $this->db->query("select * from users $where;");
+	}
+	
+	function updatedata($tabel,$data,$where){
+		return $this->db->update($tabel,$data,$where);
+	}
+	
+	function simpandata($tabel,$data){
+		return $this->db->insert($tabel,$data);
+	}
+	
+	function creategraph()
+	{
+	
+	$ukm = $this->db->query("select * from ukm order by id_ukm")->result_array();
+	$elektabilitas = $this->db->query("select * from elektabilitas ORDER BY id_ukm")->result_array();
+	
+    $this->load->library('graph');
+    $data_1 = array($elektabilitas[0]['point']);
+    $data_1[] = 50;
+    $data_1[] = 5;
+	
+    $ff = new graph();
+    $ff->set_data( $data_1 );
+    $ff->title( 'Elektabilitas UKM Kampus Berdasarkan Data Kuantitatif Kemahasiswaan', '{font-size: 14px; color: #3D5570;font-family:calibri;}' );
+    $ff->line_dot( 3, 5, '#8B6122', 'Grafik Penilaian', 10 );
+    $ff->bg_colour = '#FFFFFF';
+    $ff->set_x_labels( array( $ukm[0]['nama'],'AGUS','CAHYONO') );
+    $ff->set_y_max( 100 );
+    $ff->y_label_steps( 10 );
+    $ff->set_y_legend( 'Point Elektabilitas', 30, '#3D5570' );
+    $ff->set_x_legend( 'Nama UKM', 20, '#3D5570' );
+    $ff->set_output_type('js');
+    $ff->width = '100%';
+    $ff->height = '300';
+    return $ff->render();
+}
+
+function select_graph(){
+
+}
+		
+}
+?>
